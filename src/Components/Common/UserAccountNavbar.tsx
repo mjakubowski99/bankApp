@@ -3,7 +3,7 @@ import React from 'react';
 
 function UserAccountNavbar(){
     return (
-    <AppBar position="static" style={{backgroundColor: '#546e7a'}}>
+    <AppBar position="static">
     <Toolbar>
     <Typography variant="subtitle2" component="div" sx={{ mx: 2 }}>
         Start

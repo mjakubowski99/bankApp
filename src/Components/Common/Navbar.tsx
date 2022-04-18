@@ -13,7 +13,7 @@ type NavbarProps = {
     loggedIn: boolean 
 }
 
-export default function Navbar(props: NavbarProps) {
+export default function Navbar(props: any) {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -33,6 +33,7 @@ export default function Navbar(props: NavbarProps) {
       <AppBar position="sticky" style={{ background: '#2E3B55' }}>
         <Toolbar>
           <IconButton
+            onClick={props.toggleSidebarActive}
             size="large"
             edge="start"
             color="inherit"
@@ -44,7 +45,6 @@ export default function Navbar(props: NavbarProps) {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             BankPol
           </Typography>
-          {props.loggedIn && (
             <div>
               <IconButton
                 size="large"
@@ -75,7 +75,6 @@ export default function Navbar(props: NavbarProps) {
                 <MenuItem onClick={handleClose}>Wyloguj</MenuItem>
               </Menu>
             </div>
-          )}
         </Toolbar>
       </AppBar>
   );
