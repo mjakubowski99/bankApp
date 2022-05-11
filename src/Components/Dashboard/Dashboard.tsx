@@ -1,6 +1,8 @@
-import { Avatar, Button, Card, CardActions, CardContent, Divider, Grid, List, ListItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Divider, Grid, List, ListItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import React from 'react';
 import AppNavigation from '../Common/AppNavigation';
+import Footer from '../Common/Footer/Footer';
 import UserAccountNavbar from '../Common/UserAccountNavbar';
 
 
@@ -19,7 +21,15 @@ const rows: TransactionsTable[] = [
     {"id": 5, "date": "2022-10-11", "description": "Zakupy", "transactionType": "Przelew", "amount": "100 zl"}
 ];
 
+const useStyles = makeStyles({
+    paper: {
+        backgroundColor: "#1769aa" 
+    }
+});
+
 function Dashboard(){
+    const classes = useStyles();
+
     return (
         <div>
             <AppNavigation></AppNavigation>
@@ -77,30 +87,31 @@ function Dashboard(){
             </Grid>
 
             <TableContainer component={Paper} sx={{width: "90%", marginTop: "1rem", marginLeft: "auto", marginRight: "auto", padding: "1rem"}}>
-                <h3> Historia transakcji </h3>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell align="left">Data</TableCell>
-                        <TableCell align="left">Opis</TableCell>
-                        <TableCell align="left">Typ transakcji</TableCell>
-                        <TableCell align="left">Kwota</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        <TableRow key={row.id}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell align="left">{row.date}</TableCell>
-                            <TableCell align="left">{row.description}</TableCell>
-                            <TableCell align="left">{row.transactionType}</TableCell>
-                            <TableCell align="left">{row.amount}</TableCell>
+                <h2> Historia transakcji </h2>
+                <Table sx={{ minWidth: 650, boxShadow: 1}} aria-label="simple table">
+                    <TableHead style={{backgroundColor: "#0277bd"}}>
+                        <TableRow>
+                            <TableCell align="left" sx={{color: "white"}}>Data</TableCell>
+                            <TableCell align="left" sx={{color: "white"}}>Opis</TableCell>
+                            <TableCell align="left" sx={{color: "white"}}>Typ transakcji</TableCell>
+                            <TableCell align="left" sx={{color: "white"}}>Kwota</TableCell>
                         </TableRow>
-                    ))}
-                </TableBody>
+                    </TableHead>
+                    <TableBody>
+                        {rows.map((row) => (
+                            <TableRow key={row.id}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                                <TableCell align="left">{row.date}</TableCell>
+                                <TableCell align="left">{row.description}</TableCell>
+                                <TableCell align="left">{row.transactionType}</TableCell>
+                                <TableCell align="left">{row.amount}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
                 </Table>
             </TableContainer>
+            <Footer/>
         </div>
     )
 }
