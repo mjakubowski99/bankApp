@@ -7,18 +7,26 @@ const baseHeaders = {
 interface FetchParams{
     url: string,
     method: string,
-    body: string, 
+    params: string, 
     additionalHeaders: object
 }
 
 const baseApiFetch = (params: FetchParams): Promise<any>=> {
     const finalHeaders = {...baseHeaders, ...params.additionalHeaders};
 
-    return fetch(process.env.API_URL+params.url, {
+    let data: any = {
         method: params.method,
-        headers: finalHeaders,
-        body: params.body 
-    }).then( response => response.json())
+        headers: finalHeaders
+    }
+
+    if( params.method === 'POST' || params.method === 'PUT'){
+        data = {
+            ...data, 
+            body: params.params
+        }
+    }
+
+    return fetch('https://bankpol.herokuapp.com'+params.url, data).then( (response) => response.json() )
 }
 
 const authenticatedApiFetch = (params: FetchParams): Promise<any> => {
@@ -29,11 +37,20 @@ const authenticatedApiFetch = (params: FetchParams): Promise<any> => {
 
     const finalHeaders = {...headers, ...params.additionalHeaders};
 
-    return fetch(process.env.API_URL+params.url, {
+    let data: any = {
         method: params.method,
-        headers: finalHeaders,
-        body: params.body 
-    }).then( response => response.json())
+        headers: finalHeaders
+    }
+
+    if( params.method === 'POST' || params.method === 'PUT'){
+        data = {
+            ...data, 
+            body: params.params
+        }
+    }
+
+
+    return fetch('https://bankpol.herokuapp.com'+params.url, data).then( (response) => response.json() )
 }
 
 const AuthFetchService = {

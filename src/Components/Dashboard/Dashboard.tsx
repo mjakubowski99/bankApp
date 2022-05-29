@@ -1,6 +1,12 @@
-import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Divider, Grid, List, ListItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { FaceRetouchingNaturalSharp } from '@mui/icons-material';
+import { Avatar, Button, Card, CardActions, CardContent, CardHeader, CircularProgress, Divider, Grid, List, ListItem, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React from 'react';
+import { Box } from '@mui/system';
+import React, { useEffect } from 'react';
+import { TransferDetail } from '../../interfaces/transferDetailsList';
+import { getTransferDetails } from '../../mocks/TransferDetailMocks';
+import AuthFetchService from '../../Services/AuthFetchService';
+import { links, navigationData } from '../../Services/Navigation';
 import AppNavigation from '../Common/AppNavigation';
 import Footer from '../Common/Footer/Footer';
 import UserAccountNavbar from '../Common/UserAccountNavbar';
@@ -27,8 +33,73 @@ const useStyles = makeStyles({
     }
 });
 
+function fetchTransfers() {
+    return AuthFetchService.authenticatedApiFetch({
+        url: '/transfer',
+        method: 'GET',
+        additionalHeaders: {},
+        params: JSON.stringify({})
+    });
+}
+
+function fetchAccountBalance(){
+    return AuthFetchService.authenticatedApiFetch({
+        url: '/account/balacne',
+        method: 'GET',
+        additionalHeaders: {},
+        params: JSON.stringify({})
+    });
+}
+
+function fetchContacts(){
+    return AuthFetchService.authenticatedApiFetch({
+        url: '/contacts',
+        method: 'GET',
+        additionalHeaders: {},
+        params: JSON.stringify({})
+    });
+}
+
 function Dashboard(){
     const classes = useStyles();
+
+    const [accountBalance, setAccountBalance] = React.useState('');
+    const [transferDetails, setTransferDetails] = React.useState<TransferDetail[]>([]);
+
+    const [accountBalanceLoading, setAccountBalanceLoading] = React.useState(true);
+    const [transferDetailsLoading, setTransferDetailsLoading] = React.useState(true);
+
+    const handleNewTransferClick = () => {
+        window.location.href = links.createTransfer;
+    }
+
+    useEffect( () => {
+        fetchAccountBalance().then( (data: any) => {
+            setAccountBalance(data);
+            setAccountBalanceLoading(false);
+        }).catch( (err: any) => {
+            console.log(err);
+        });
+
+        fetchTransfers().then( (data: any) => {
+            if( data.transferDetailsList ){
+                setTransferDetails(data.transferDetailsList);
+            }
+            setTransferDetailsLoading(false);
+        }).catch( (err: any) => {
+            console.log(err);
+            alert("Something unexpected happend");
+        });
+
+        fetchContacts().then( (data: any) => {
+            console.log(data);
+        }).catch( (err: any) => {
+            console.log(err);
+            alert("Something unexpected happend");
+        });
+
+
+    }, []);
 
     return (
         <div>
@@ -43,15 +114,12 @@ function Dashboard(){
                             <Typography sx={{ fontSize: 20 }} color="text.secondary" gutterBottom>
                                 Konto osobiste
                             </Typography>
-                            <Typography variant="h5" component="div">
-                                89 ... 122 041
-                            </Typography>
                             <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                Środki: 20000zł
+                                { accountBalanceLoading ? <CircularProgress/> : "Środki: "+accountBalance+"zł"}
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <Button variant="contained">Nowy przelew</Button>
+                            <Button variant="contained" onClick={handleNewTransferClick}>Nowy przelew</Button>
                         </CardActions>
                     </Card>
                 </Grid>
@@ -60,7 +128,7 @@ function Dashboard(){
                     <Card sx={{ minWidth: 275, marginTop: 1, padding: "1rem"}}>
                         <CardContent>
                             <Typography sx={{ fontSize: 20 }} color="text.secondary" gutterBottom>
-                                Ostatni odbiorcy: 
+                                Kontakty: 
                             </Typography>
 
                             <List>
@@ -80,37 +148,53 @@ function Dashboard(){
                                     <Button>Paweł Polak</Button>
                                 </ListItem>
                             </List>
+
+                            <Button variant="contained"> Dodaj kontakt </Button>
                             
                         </CardContent>
                     </Card>
                 </Grid>
             </Grid>
 
-            <TableContainer component={Paper} sx={{width: "90%", marginTop: "1rem", marginLeft: "auto", marginRight: "auto", padding: "1rem"}}>
-                <h2> Historia transakcji </h2>
-                <Table sx={{ minWidth: 650, boxShadow: 1}} aria-label="simple table">
-                    <TableHead style={{backgroundColor: "#0277bd"}}>
-                        <TableRow>
-                            <TableCell align="left" sx={{color: "white"}}>Data</TableCell>
-                            <TableCell align="left" sx={{color: "white"}}>Opis</TableCell>
-                            <TableCell align="left" sx={{color: "white"}}>Typ transakcji</TableCell>
-                            <TableCell align="left" sx={{color: "white"}}>Kwota</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {rows.map((row) => (
-                            <TableRow key={row.id}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell align="left">{row.date}</TableCell>
-                                <TableCell align="left">{row.description}</TableCell>
-                                <TableCell align="left">{row.transactionType}</TableCell>
-                                <TableCell align="left">{row.amount}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                <TableContainer component={Paper} sx={{width: "90%", marginTop: "1rem", marginLeft: "auto", marginRight: "auto", padding: "1rem"}}>
+                    <h2> Historia transakcji </h2>
+                    { 
+                        transferDetailsLoading ?
+                        <div style={{display: 'flex', justifyContent: 'center'}}>
+                            <CircularProgress/>
+                        </div> :
+                        <Table sx={{ minWidth: 650, boxShadow: 1}} aria-label="simple table">
+                            <TableHead style={{backgroundColor: "#0277bd"}}>
+                                <TableRow>
+                                    <TableCell align="left" sx={{color: "white"}}>Adresant</TableCell>
+                                    <TableCell align="left" sx={{color: "white"}}>Odbiorca</TableCell>
+                                    <TableCell align="left" sx={{color: "white"}}>Typ transakcji</TableCell>
+                                    <TableCell align="left" sx={{color: "white"}}>Tytuł</TableCell>
+                                    <TableCell align="left" sx={{color: "white"}}>Kwota</TableCell>
+                                    <TableCell align="left" sx={{color: "white"}}>Data</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {transferDetails.map((transferDetail) => (
+                                    <TableRow key={transferDetail.id}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell align="left">
+                                            {transferDetail.sourceAccount.firstName + ' ' + transferDetail.sourceAccount.lastName}
+                                        </TableCell>
+                                        <TableCell align="left">
+                                            {transferDetail.destinationAccount.firstName + ' ' + transferDetail.destinationAccount.lastName}
+                                        </TableCell>
+                                        <TableCell align="left">{transferDetail.transactionType}</TableCell>
+                                        <TableCell align="left">{transferDetail.title}</TableCell>
+                                        <TableCell align="left">{transferDetail.amount + 'zł'}</TableCell>
+                                        <TableCell align="left">{transferDetail.date}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    }
+                </TableContainer>
             <Footer/>
         </div>
     )

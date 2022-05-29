@@ -8,6 +8,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import { Link } from '@mui/material';
+import { links } from '../../Services/Navigation';
+import AuthService from '../../Services/AuthService';
+import { Navigate } from 'react-router-dom';
 
 type NavbarProps = {
     loggedIn: boolean 
@@ -16,6 +20,7 @@ type NavbarProps = {
 export default function Navbar(props: any) {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [loggedOut, setLoggedOut] = React.useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAuth(event.target.checked);
@@ -31,6 +36,7 @@ export default function Navbar(props: any) {
 
   return (
       <AppBar position="sticky" style={{ background: '#2E3B55' }}>
+        { loggedOut && <Navigate replace to='/login'/>}
         <Toolbar>
           <IconButton
             onClick={props.toggleSidebarActive}
@@ -71,8 +77,15 @@ export default function Navbar(props: any) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profil</MenuItem>
-                <MenuItem onClick={handleClose}>Wyloguj</MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <Link href={links.profile} underline="none">Profil</Link>
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <Link underline="none" onClick={ (e) => {
+                    AuthService.logout()
+                    setLoggedOut(true);
+                  }}>Wyloguj</Link>
+                </MenuItem>
               </Menu>
             </div>
         </Toolbar>

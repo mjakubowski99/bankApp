@@ -1,5 +1,6 @@
 import withAppliedCatch from "./CommonService";
 import AuthFetchService from "./AuthFetchService";
+import { ResponseStatus } from "../interfaces/common";
 
 interface User{
     refreshToken: string
@@ -9,36 +10,53 @@ function getUser(): User{
     return JSON.parse( localStorage.getItem('user') || '{}' );
 }
 
+const saveUserDataInLocalStorage = (data: any) => {
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('user', JSON.stringify(data.user));
+}
+
 const register = (register: any) => {
     
     return AuthFetchService.baseApiFetch({
         url: '/auth/register',
         method: "POST",
-        body: JSON.stringify(register),
+        params: JSON.stringify(register),
         additionalHeaders: {}
+    }).then( (data: any) => {
+        if( data.user !== undefined ){
+            saveUserDataInLocalStorage(data);
+        }
+        return data;
     })
 }
 
-const login = (email: string, password: string) => {
+const login = (username: string, password: string) => {
 
     return AuthFetchService.baseApiFetch({
         url: '/auth/login',
         method: "POST",
-        body: JSON.stringify({email: email, password: password}),
+        params: JSON.stringify({username: username, password: password}),
         additionalHeaders: {}
     })
-    .then( data => {
-        if (data.success) {
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
+    .then( (data: any) => {
+        if( data.user !== undefined ){
+            saveUserDataInLocalStorage(data);
         }
-        return data;
-    });
+        return data
+    }).catch( err => {
+        console.log(err);
+    })
+}
+
+const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
 }
 
 const AuthService = {
     register,
-    login
+    login,
+    logout
 }
 
 export default AuthService

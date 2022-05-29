@@ -1,10 +1,11 @@
-import { Box, Button, Divider, Drawer, List, ListItem, ListItemText } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Box, Button, Divider, Drawer, Link, List, ListItem, ListItemText } from '@mui/material';
 import React from 'react';
 import { makeStyles } from '@mui/styles';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { LinkElementWithIcon } from '../../../interfaces/common';
+import { navigationDataWithIcons } from '../../../Services/Navigation';
 
 const useStyles = makeStyles({
     paper:{
@@ -15,21 +16,6 @@ const useStyles = makeStyles({
 export default function Sidebar(props: any){
     const classes = useStyles();
 
-    const fields = [
-        {
-            text: "Start",
-            icon: <PlayArrowIcon />
-        },
-        {
-            text: "Przelewy",
-            icon: <AttachMoneyIcon/>
-        },
-        {
-            text: "Moje konto",
-            icon: <AccountCircleIcon/>
-        }
-    ];
-
     return (
         <Drawer anchor="left" open={props.active} onClose={props.toggleSidebarActive} classes={{ paper: classes.paper }}>
             <Box role="presentation">
@@ -38,11 +24,11 @@ export default function Sidebar(props: any){
                         <h2>BankPol</h2>
                     </ListItem>
                     <Divider/>
-                    {fields.map((field, index) => (
+                    {navigationDataWithIcons.map((item: LinkElementWithIcon, index: number) => (
                         <div>
-                            <ListItem button key={field.text}>
-                                {field.icon}
-                                <ListItemText primary={field.text} />
+                            <ListItem button key={index}>
+                                {item.icon}
+                                <Link href={item.href} underline="none">{item.name}</Link>
                             </ListItem>
                             <Divider/>
                         </div>
