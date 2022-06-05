@@ -17,7 +17,7 @@ interface TransferAccount{
 }
 
 interface TransferDetail{
-    id: number,
+    transferId: number,
     sourceAccount: TransferAccount,
     destinationAccount: TransferAccount,
     title: string,

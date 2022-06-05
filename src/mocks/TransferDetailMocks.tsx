@@ -3,7 +3,7 @@ import { TransferDetail } from "../interfaces/transferDetailsList";
 function getTransferDetails(): TransferDetail[]{
     return [
         {
-            id: 1,
+            transferId: 1,
             destinationAccount: {
                 firstName: "string",
                 lastName: "string",

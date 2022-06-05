@@ -8,7 +8,7 @@ const links = {
     start: "/dashboard",
     transactions: "/transactions",
     profile: "/user/profile",
-    transfer: "/transfer",
+    transfer: "/transaction/details",
     createTransfer: "/transactions/create"
 }
 
@@ -18,16 +18,12 @@ const navigationData: LinkElement[] = [
         href: links.start
     },
     {
-        name: "Przelewy",
-        href: links.transactions
-    },
-    {
         name: "Moje konto",
         href: links.profile
     }
 ]
 
-const navigationDataWithIcons: LinkElementWithIcon[] = [<PlayArrowIcon/>, <AttachMoneyIcon/>, <AccountCircleIcon/>]
+const navigationDataWithIcons: LinkElementWithIcon[] = [<PlayArrowIcon/>, <AccountCircleIcon/>]
     .map( (item: React.ReactNode, index) => {
         return {
             name: navigationData[index].name,
