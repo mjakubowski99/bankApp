@@ -54,6 +54,15 @@ function fetchAccountBalance(){
     });
 }
 
+function fetchExportToPdf(){
+    const headers = {
+        'Accept': 'application/pdf',
+        'Authorization': 'Bearer '+ localStorage.getItem('token')
+    };
+
+    return fetch('https://bankpol.herokuapp.com/transfer/export/pdf', {'method': 'GET', 'headers': headers});
+}
+
 function fetchContacts(){
     return AuthFetchService.authenticatedApiFetch({
         url: '/contacts',
@@ -82,6 +91,14 @@ function Dashboard(){
     }
 
 
+    const handleExportClick = () => {
+        fetchExportToPdf()
+            .then(response => response.blob())
+            .then( blob => {
+                let url = window.URL.createObjectURL(blob);
+                window.open(url, '_blank')?.focus();
+            })
+    }
 
     useEffect( () => {
         fetchAccountBalance().then( (data: any) => {
@@ -157,7 +174,12 @@ function Dashboard(){
             </Grid>
 
                 <TableContainer component={Paper} sx={{width: "90%", marginTop: "1rem", marginLeft: "auto", marginRight: "auto", padding: "1rem"}}>
-                    <h2> Historia transakcji </h2>
+                    <h2> 
+                        Historia transakcji:
+                        <Button variant="contained" onClick={handleExportClick}>
+                            Wyeksportuj do pdf
+                        </Button>
+                    </h2>
                     { 
                         transferDetailsLoading ?
                         <div style={{display: 'flex', justifyContent: 'center'}}>
@@ -176,7 +198,7 @@ function Dashboard(){
                             </TableHead>
                             <TableBody>
                                 {transferDetails.map((transferDetail) => (
-                                    <TableRow key={transferDetail.id}
+                                    <TableRow key={transferDetail.transferId}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell align="left">
@@ -186,7 +208,9 @@ function Dashboard(){
                                             {transferDetail.destinationAccount.firstName + ' ' + transferDetail.destinationAccount.lastName}
                                         </TableCell>
                                         <TableCell align="left">{transferDetail.transactionType}</TableCell>
-                                        <TableCell align="left">{transferDetail.title}</TableCell>
+                                        <TableCell align="left">
+                                            <a href={links.transfer+'?transaction_id='+transferDetail.transferId}> {transferDetail.title} </a>
+                                        </TableCell>
                                         <TableCell align="left">{transferDetail.amount + 'zł'}</TableCell>
                                         <TableCell align="left">{transferDetail.date}</TableCell>
                                     </TableRow>

@@ -3,7 +3,9 @@ import AuthFetchService from "./AuthFetchService";
 import { ResponseStatus } from "../interfaces/common";
 
 interface User{
-    refreshToken: string
+    username: string;
+    lastName: string;
+    firstName: string;
 }
 
 function getUser(): User{
@@ -62,7 +64,8 @@ const AuthService = {
     register,
     login,
     logout,
-    getUsername
+    getUsername,
+    getUser
 }
 
 export default AuthService
