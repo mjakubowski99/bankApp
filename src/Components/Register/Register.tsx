@@ -53,7 +53,7 @@ export default function Register(){
             <form onSubmit={(e) => handleFormSubmit(e)}>
                 <Stack spacing={3} mt={5} ml={2} p={3}>
                     <h1> Rejestracja </h1>
-                    <span> Podaj swoje dane w celu zarejestrowania konta w nieprawdziwym banku</span>
+                    <span> Podaj swoje dane w celu zarejestrowania konta w nieprawdziwym banku, i dostań stówkę na start</span>
                     <TextField id="username" label="Username" variant="outlined" value={username} onChange={ e => setUsername(e.target.value)}/>
                     <TextField id="password" label="Password" variant="outlined" value={password} onChange={ e => setPassword(e.target.value)} type="password"/>
                     <TextField id="passwordConfirmation" label="Password confirmation" variant="outlined" type="password" value={passwordConfirmation} onChange={ e => setPasswordConfirmation(e.target.value)}/>
