@@ -2,7 +2,7 @@ import { FaceRetouchingNaturalSharp } from '@mui/icons-material';
 import { Avatar, Button, Card, CardActions, CardContent, CardHeader, CircularProgress, Divider, Grid, List, ListItem, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { Box } from '@mui/system';
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { TransferDetail } from '../../interfaces/transferDetailsList';
 import { getTransferDetails } from '../../mocks/TransferDetailMocks';
 import AuthFetchService from '../../Services/AuthFetchService';
@@ -10,6 +10,9 @@ import { links, navigationData } from '../../Services/Navigation';
 import AppNavigation from '../Common/AppNavigation';
 import Footer from '../Common/Footer/Footer';
 import UserAccountNavbar from '../Common/UserAccountNavbar';
+import CreateContant from "../Contact/CreateContant";
+import ContactList from "../Contact/ContactList";
+import {ContactsDetails} from "../../interfaces/contactDetailsList";
 
 
 interface TransactionsTable{
@@ -69,9 +72,16 @@ function Dashboard(){
     const [accountBalanceLoading, setAccountBalanceLoading] = React.useState(true);
     const [transferDetailsLoading, setTransferDetailsLoading] = React.useState(true);
 
+    const [contactsList, setContactsList] = useState<ContactsDetails[]>([]);
+    const [contactsListLoading, setContactsListLoading] = React.useState(true);
+    const [showCreateContact, setShowCreateContact] = useState(false);
+
+
     const handleNewTransferClick = () => {
         window.location.href = links.createTransfer;
     }
+
+
 
     useEffect( () => {
         fetchAccountBalance().then( (data: any) => {
@@ -92,12 +102,15 @@ function Dashboard(){
         });
 
         fetchContacts().then( (data: any) => {
-            console.log(data);
+            if(data.contactDetailsList){
+                setContactsList(data.contactDetailsList);
+            }
+            setContactsListLoading(false);
+
         }).catch( (err: any) => {
             console.log(err);
             alert("Something unexpected happend");
         });
-
 
     }, []);
 
@@ -131,27 +144,14 @@ function Dashboard(){
                                 Kontakty: 
                             </Typography>
 
-                            <List>
-                                <ListItem>
-                                    <Avatar/>
-                                    <Button>Marek Kowalski</Button>
-                                </ListItem>
-                                <Divider/>
-                                <ListItem>
-                                    <Avatar/>
-                                    <Button>Tadeusz Nowak</Button>
+                            <ContactList contacts={contactsList}/>
 
-                                </ListItem>
-                                <Divider/>
-                                <ListItem>
-                                    <Avatar/>
-                                    <Button>Paweł Polak</Button>
-                                </ListItem>
-                            </List>
+                            <Button variant="contained" color={showCreateContact ? "error" : "primary"} onClick={() => setShowCreateContact(!showCreateContact)}> {showCreateContact? "Anuluj dodawnie": "Dodaj kontakt"} </Button>
 
-                            <Button variant="contained"> Dodaj kontakt </Button>
-                            
                         </CardContent>
+                        <>
+                            {showCreateContact && <CreateContant />}
+                        </>
                     </Card>
                 </Grid>
             </Grid>

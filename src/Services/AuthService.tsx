@@ -53,10 +53,16 @@ const logout = () => {
     localStorage.removeItem('user');
 }
 
+const getUsername = () => {
+
+    return JSON.parse( localStorage.getItem('user') || '{}' );
+}
+
 const AuthService = {
     register,
     login,
-    logout
+    logout,
+    getUsername
 }
 
 export default AuthService

@@ -8,6 +8,7 @@ import RequiredAuth from "./Components/Auth/RequiredAuth";
 import UserProfile from './Components/Profile/UserProfile';
 import CreateTransaction from './Components/Transaction/CreateTransaction';
 import RedirectAuth from './Components/Auth/RedirectAuth';
+import CreateContant from "./Components/Contact/CreateContant";
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
               <RequiredAuth><Dashboard/></RequiredAuth>
           }/>
           <Route path='/user/profile' element={ <RequiredAuth><UserProfile/></RequiredAuth>}/>
-          <Route path='/transactions/create' element={ <RequiredAuth><CreateTransaction/></RequiredAuth> }/>
+          <Route path='/transactions/create' element={ <RequiredAuth><CreateTransaction/></RequiredAuth> }/><Route path='/transactions/create' element={ <RequiredAuth><CreateTransaction/></RequiredAuth> }/>
+            <Route path='/contacts/create' element={ <RequiredAuth><CreateContant/></RequiredAuth> }/>
         </Routes>
       </main>
   );
