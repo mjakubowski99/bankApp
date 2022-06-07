@@ -9,9 +9,9 @@ const links = {
     transactions: "/transactions",
     profile: "/user/profile",
     transfer: "/transfer",
+    transactionDetails: "/transaction/details",
     createTransfer: "/transactions/create",
     createContact: "/contacts/create"
-
 }
 
 const navigationData: LinkElement[] = [

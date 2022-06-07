@@ -39,7 +39,7 @@ function getTransferDetails(): TransferDetail[]{
             title: "string",
             amount: 100,
             date: "2022-05-29T17:04:31.316Z",
-            transactionType: "outcome",
+            type: "outgoing",
             links: {
                 rel: "string",
                 href: "string",

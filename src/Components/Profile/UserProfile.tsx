@@ -2,6 +2,7 @@ import { Avatar, Button, Card, CardActions, CardContent, CardHeader, FormLabel, 
 import React, { useEffect } from 'react';
 import AuthFetchService from '../../Services/AuthFetchService';
 import AuthService from '../../Services/AuthService';
+import { formatAmount } from '../../Services/CalculationService';
 import AppNavigation from '../Common/AppNavigation';
 
 const avatar = "https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png";
@@ -45,7 +46,7 @@ export default function UserProfile(){
 
                                 <Grid item xs={12} md={6} sx={{ml: 2}}>
                                     <Typography variant="h5" sx={{marginBottom: 2}}> Dane szczegółowe: </Typography>
-                                    <Typography variant="h6" sx={{marginTop: 2}}> Stan konta: {accountBalance} zł </Typography>
+                                    <Typography variant="h6" sx={{marginTop: 2}}> Stan konta: { formatAmount(accountBalance) } zł </Typography>
                                     <InputLabel sx={{marginTop: 2}}> Username: </InputLabel>
                                     <TextField id="filled-basic" label={userData.username} variant="filled" disabled/>
                                     <InputLabel sx={{marginTop: 2}}> Imie i nazwisko: </InputLabel>

@@ -6,7 +6,7 @@ import AuthFetchService from '../../Services/AuthFetchService';
 import { Navigate, useLocation } from 'react-router-dom';
 
 const makeTransfer = (username: string, amount: number, title: string) => {
-    return AuthFetchService.authenticatedApiFetch({
+    return AuthFetchService.authenticatedApiFormFetch({
         url: '/transfer',
         method: 'POST',
         additionalHeaders: {},
@@ -43,9 +43,8 @@ export default function CreateTransaction(props: any){
             return;
         }
 
-        makeTransfer(username, parseInt(amount), title)
-            .then( (data) => {
-                console.log(data);
+        makeTransfer(username, parseFloat(amount)*100, title)
+            .then( (data: any) => {
                 if( data.status >= 400 && data.status < 500){
                     switch(data.message){
                         case 'recipientNotFound':

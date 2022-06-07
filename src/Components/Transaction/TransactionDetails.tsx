@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { getTransferDetails } from "../../mocks/TransferDetailMocks";
 import AuthFetchService from "../../Services/AuthFetchService";
+import { formatAmount } from "../../Services/CalculationService";
 import AppNavigation from "../Common/AppNavigation";
 import ErrorPage from "../Common/ErrorPage";
 
@@ -27,6 +28,7 @@ export default function TransactionDetails(){
     useEffect( () => {
 
         fetchTransferDetails(searchParams.get("transaction_id")).then(response => {
+            console.log(response);
             if( response.status === 404 ){
                 switch(response.message){
                     case 'unauthorized':
@@ -50,8 +52,8 @@ export default function TransactionDetails(){
 
     return (
         redirectToTransfer ? <Navigate replace to="/transactions/create" state={{
-            'username': transferDetail.transactionType === 'income' ? transferDetail.destinationAccount.username : transferDetail.sourceAccount.username,
-            'amount': transferDetail.amount,
+            'username': transferDetail.type === 'incoming' ? transferDetail.destinationAccount.username : transferDetail.sourceAccount.username,
+            'amount': formatAmount(transferDetail.amount),
             'title': transferDetail.title
         }}></Navigate> :
         isLoadingError ? <ErrorPage message={loadingError}/> : 
@@ -80,7 +82,7 @@ export default function TransactionDetails(){
                             <Divider/>
                             <ListItem>
                                 <b>Kwota:</b> 
-                                {transferDetail.amount} zł
+                                { formatAmount(transferDetail.amount) } zł
                             </ListItem>
                             <ListItem>
                                 <b>Data:</b> 
@@ -89,7 +91,7 @@ export default function TransactionDetails(){
                             <Divider/>
                             <ListItem>
                                 <Button variant="contained" onClick={ () => {setRedirectToTransfer(true)}}> 
-                                    {transferDetail.transactionType === 'income' ? "Odpowiedz na przelew" : "Ponów przelew"}
+                                    {transferDetail.type === 'incoming' ? "Odpowiedz na przelew" : "Ponów przelew"}
                                 </Button>
                             </ListItem>
                         </List>

@@ -23,7 +23,7 @@ interface TransferDetail{
     title: string,
     amount: number,
     date: string,
-    transactionType: "outcome" | "income",
+    type: "outgoing" | "incoming",
     links: {
         rel: string,
         href: string,

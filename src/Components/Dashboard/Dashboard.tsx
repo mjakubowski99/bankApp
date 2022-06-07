@@ -13,6 +13,7 @@ import UserAccountNavbar from '../Common/UserAccountNavbar';
 import CreateContant from "../Contact/CreateContant";
 import ContactList from "../Contact/ContactList";
 import {ContactsDetails} from "../../interfaces/contactDetailsList";
+import { formatAmount } from '../../Services/CalculationService';
 
 
 interface TransactionsTable{
@@ -102,7 +103,7 @@ function Dashboard(){
 
     useEffect( () => {
         fetchAccountBalance().then( (data: any) => {
-            setAccountBalance(data);
+            setAccountBalance( formatAmount(data) );
             setAccountBalanceLoading(false);
         }).catch( (err: any) => {
             console.log(err);
@@ -174,7 +175,7 @@ function Dashboard(){
             </Grid>
 
                 <TableContainer component={Paper} sx={{width: "90%", marginTop: "1rem", marginLeft: "auto", marginRight: "auto", padding: "1rem"}}>
-                    <h2> 
+                    <h2 style={{paddingBottom: "10px"}}> 
                         Historia transakcji:
                         <Button variant="contained" onClick={handleExportClick}>
                             Wyeksportuj do pdf
@@ -207,11 +208,11 @@ function Dashboard(){
                                         <TableCell align="left">
                                             {transferDetail.destinationAccount.firstName + ' ' + transferDetail.destinationAccount.lastName}
                                         </TableCell>
-                                        <TableCell align="left">{transferDetail.transactionType}</TableCell>
+                                        <TableCell align="left">{transferDetail.type}</TableCell>
                                         <TableCell align="left">
-                                            <a href={links.transfer+'?transaction_id='+transferDetail.transferId}> {transferDetail.title} </a>
+                                            <a href={links.transactionDetails+'?transaction_id='+transferDetail.transferId}> {transferDetail.title} </a>
                                         </TableCell>
-                                        <TableCell align="left">{transferDetail.amount + 'zł'}</TableCell>
+                                        <TableCell align="left">{ formatAmount(transferDetail.amount) + 'zł'}</TableCell>
                                         <TableCell align="left">{transferDetail.date}</TableCell>
                                     </TableRow>
                                 ))}
