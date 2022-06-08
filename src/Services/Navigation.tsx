@@ -11,7 +11,6 @@ const links = {
     transfer: "/transfer",
     transactionDetails: "/transaction/details",
     createTransfer: "/transactions/create",
-    createContact: "/contacts/create"
 }
 
 const navigationData: LinkElement[] = [

@@ -8,7 +8,6 @@ import RequiredAuth from "./Components/Auth/RequiredAuth";
 import UserProfile from './Components/Profile/UserProfile';
 import CreateTransaction from './Components/Transaction/CreateTransaction';
 import RedirectAuth from './Components/Auth/RedirectAuth';
-import CreateContant from "./Components/Contact/CreateContant";
 import TransactionDetails from './Components/Transaction/TransactionDetails';
 
 function App() {
@@ -25,7 +24,6 @@ function App() {
 
           <Route path='/transactions/create' element={ <RequiredAuth><CreateTransaction/></RequiredAuth> }/>
           <Route path='/transaction/details' element={ <RequiredAuth><TransactionDetails/></RequiredAuth> }/>
-            <Route path='/contacts/create' element={ <RequiredAuth><CreateContant/></RequiredAuth> }/>
         </Routes>
       </main>
   );
