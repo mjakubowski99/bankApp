@@ -52,7 +52,7 @@ export default function TransactionDetails(){
 
     return (
         redirectToTransfer ? <Navigate replace to="/transactions/create" state={{
-            'username': transferDetail.type === 'incoming' ? transferDetail.destinationAccount.username : transferDetail.sourceAccount.username,
+            'username': transferDetail.type === 'incoming' ? transferDetail.sourceAccount.username : transferDetail.destinationAccount.username,
             'amount': formatAmount(transferDetail.amount),
             'title': transferDetail.title
         }}></Navigate> :
