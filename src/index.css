@@ -19,6 +19,13 @@ code {
   padding: 0;
 }
 
+.contact-list{
+  width: 100%;
+  max-width: 600px;
+  max-height: 400px;
+  overflow: auto;
+
+}
 
 .container {
   max-width: 500px;

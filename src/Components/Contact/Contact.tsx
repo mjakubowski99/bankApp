@@ -33,6 +33,7 @@ const Contact = ({ contact } : any) => {
 
     const [showEdit, setShowEdit] = useState(false)
     const [newCustomName, setNewCustomName] = useState('')
+    const [showNewCustomNameError, setShowNewCustomNameError] = React.useState({hasError: false, message: ''});
 
 
     const onDelete = (username :string, customName :string) => {
@@ -59,22 +60,31 @@ const Contact = ({ contact } : any) => {
 
         e.preventDefault()
 
-        if(window.confirm(`Czy napewno chcesz zmienić nazwę kontatu z ${contact.customName} na ${newCustomName} ?`))
-        {
-            editContact(contact.username, newCustomName)
-                .then( (data) => {
-                    console.log(data)
-                    if( data.status === 404 ){
-                        alert("Nieoczekiwany problem spróbuj ponownie później");
-                    }
-                    else
-                    {
-                        toast("Pomyślnie edytowano kontakt");
-                        setTimeout(function () { (window.location.reload()) }, 1500);
-                    }
+        if(newCustomName.length <= 37) {
+            if(window.confirm(`Czy napewno chcesz zmienić nazwę kontatu z ${contact.customName} na ${newCustomName} ?`)) {
+                    editContact(contact.username, newCustomName)
+                        .then( (data) => {
+                            console.log(data)
+                            if( data.status === 404 ){
+                                alert("Nieoczekiwany problem spróbuj ponownie później");
+                            }
+                            else
+                            {
+                                toast("Pomyślnie edytowano kontakt");
+                                setShowNewCustomNameError({hasError: false, message: ''})
+                                setNewCustomName('')
+                                setTimeout(function () { (window.location.reload()) }, 1500);
+                            }
 
-                })
+                        })
+
+            }
         }
+        else {
+            setShowNewCustomNameError({hasError: true, message: 'Za długa nazwa'})
+        }
+
+
 
     }
 
@@ -99,6 +109,8 @@ const Contact = ({ contact } : any) => {
                                        disabled={true}/>
                             <TextField label="Nowa nazwa" variant="outlined" sx={{mb: 1, width:"100%"} }
                                        value={newCustomName}
+                                       error={showNewCustomNameError.hasError}
+                                       helperText={showNewCustomNameError.message}
                                        onChange={(e) => setNewCustomName(e.target.value)}
                             />
                             <Button type="submit" variant="contained" color="primary" sx={{width: "100%"}} >
